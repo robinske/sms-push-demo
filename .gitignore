@@ -1,0 +1,6 @@
+*.db
+*.log
+*.pyc
+env/*
+.DS_Store
+.python-version
