@@ -5,18 +5,23 @@ import phonenumbers as pn
 from flask import Flask, Response, request
 
 from authy.api import AuthyApiClient
+from twilio.rest import Client
+from twilio.twiml.messaging_response import MessagingResponse
 
 authy_api = AuthyApiClient(os.environ["PUSH_DEMO_AUTHY_API_KEY"])
-
-## # TODO:
-# Add logo, details, more info in general
 
 
 app = Flask(__name__)
 
+session = {}
+
+
 def _push(phone, text):
     country_code = phone.country_code
     number = phone.national_number
+
+    session['country_code'] = country_code
+    session['phone_number'] = number
 
     user = authy_api.users.create(
         'stub@myemail.com',
@@ -50,10 +55,18 @@ def _push(phone, text):
     else:
         return "There was an error sending the request: {}".format(response.errors())
 
-@app.route("/action", methods=["GET", "POST"])
-def action():
-    # use as webhook to send notification about whether it was accepted or rejected
-    pass
+@app.route("/callback", methods=["GET", "POST"])
+def callback():
+    status = request.args.get("status")
+
+    message = "The request was {}".format(status)
+    from_ = os.environ["PUSH_DEMO_FROM"]
+    to = str(session['country_code']) + str(session['phone_number'])
+
+    client = Client()
+    message = client.messages.create(body=message, from_=from_, to=to)
+
+    return message.sid
 
 @app.route("/push", methods=["GET", "POST"])
 def push():
@@ -62,12 +75,7 @@ def push():
 
     uuid = _push(phone=pn.parse(from_), text=message_)
 
-    twiml = """
-    <Response>
-        <Message>
-            Push notification incoming!
-        </Message>
-    </Response>
-    """
+    resp = MessagingResponse()
+    resp.message("Push notification incoming!")
 
-    return Response(twiml, mimetype="text/xml")
+    return str(resp)
