@@ -1,15 +1,17 @@
 import os
 import phonenumbers as pn
-from app_config import client, authy_api
 
 from flask import Flask, Response, request
 
-app = Flask(__name__)
+from authy.api import AuthyApiClient
+
+authy_api = AuthyApiClient(os.environ["PUSH_DEMO_AUTHY_API_KEY"])
 
 ## # TODO:
-# Add webhook to send a text back with the approval/denied
 # Add logo, details, more info in general
-# Deploy + share
+
+
+app = Flask(__name__)
 
 def _push(phone, text):
     country_code = phone.country_code
@@ -68,7 +70,3 @@ def push():
     """
 
     return Response(twiml, mimetype="text/xml")
-
-
-if __name__ == '__main__':
-    app.run()
