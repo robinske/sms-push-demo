@@ -1,4 +1,5 @@
 import os
+import random
 import phonenumbers as pn
 
 from flask import Flask, Response, request
@@ -24,17 +25,17 @@ def _push(phone, text):
 
     logo = {
         'res': 'default',
-        'url': 'wave.png'
+        'url': 'https://github.com/robinske/sms-push-demo/blob/master/wave.png?raw=true'
     }
 
     details = {
-        'username': '',
-        'location': '',
         'Account Number': str(user.id),
         'Phone Number': str(number)
     }
 
-    details['username'] = str(number)
+    usernames = ['Opalescent Tree Shark', 'Perfect Sunflower', 'Rainbow Infused Space Unicorn', 'Beautiful Rule-breaking Moth']
+
+    details['Username'] = random.choice(usernames)
     message = "You said: {}".format(text)
 
     response = authy_api.one_touch.send_request(
