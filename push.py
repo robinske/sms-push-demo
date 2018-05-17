@@ -13,15 +13,10 @@ authy_api = AuthyApiClient(os.environ["PUSH_DEMO_AUTHY_API_KEY"])
 
 app = Flask(__name__)
 
-session = {}
-
 
 def _push(phone, text):
     country_code = phone.country_code
     number = phone.national_number
-
-    session['country_code'] = country_code
-    session['phone_number'] = number
 
     user = authy_api.users.create(
         'stub@myemail.com',
@@ -35,7 +30,7 @@ def _push(phone, text):
 
     details = {
         'Account Number': str(user.id),
-        'Phone Number': str(number)
+        'Phone Number': str(country_code) + str(number)
     }
 
     usernames = ['Opalescent Tree Shark', 'Perfect Sunflower', 'Rainbow Infused Space Unicorn', 'Beautiful Rule-breaking Moth']
@@ -61,7 +56,7 @@ def callback():
 
     message = "The request was {}".format(status)
     from_ = os.environ["PUSH_DEMO_FROM"]
-    to = str(session['country_code']) + str(session['phone_number'])
+    to = request.args.get("approval_request[transaction][details][Phone Number]"))
 
     client = Client()
     message = client.messages.create(body=message, from_=from_, to=to)
