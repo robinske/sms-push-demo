@@ -56,7 +56,7 @@ def callback():
 
     message = "The request was {}".format(status)
     from_ = os.environ["PUSH_DEMO_FROM"]
-    to = request.args.get("approval_request[transaction][details][Phone Number]"))
+    to = request.args.get("approval_request[transaction][details][Phone Number]")
 
     client = Client()
     message = client.messages.create(body=message, from_=from_, to=to)
