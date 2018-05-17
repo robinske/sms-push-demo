@@ -6,18 +6,15 @@ This project triggers an Authy Push Notification from an incoming SMS message
 
 - Install the requirements and setup the development environment.
 
-        ```
         virtualenv env
         source env/bin/activate
         
         pip install -r requirements.txt
-        ```
+
 
 - Run the application.
 
-        ```
         gunicorn app:app
-        ```
 
 - Navigate to [localhost:8000](localhost:8000).
 
@@ -28,8 +25,8 @@ Create a [Heroku account](https://signup.heroku.com/)
 
 Download the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
 
-        `heroku create`
-        `git push heroku master`
+        heroku create
+        git push heroku master
 
 
 ## License
