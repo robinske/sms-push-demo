@@ -1,16 +1,23 @@
 ## About
 
-This project is a boilerplat application for responding to SMS messages with Twilio. See [https://www.twilio.com/docs/quickstart/python/sms](https://www.twilio.com/docs/quickstart/python/sms) for more details.
+This project triggers an Authy Push Notification from an incoming SMS message
 
 ## Setup
 
 - Install the requirements and setup the development environment.
 
-        `./setup.sh`
+        ```
+        virtualenv env
+        source env/bin/activate
+        
+        pip install -r requirements.txt
+        ```
 
 - Run the application.
 
-        `./run.sh`
+        ```
+        gunicorn app:app
+        ```
 
 - Navigate to [localhost:8000](localhost:8000).
 
